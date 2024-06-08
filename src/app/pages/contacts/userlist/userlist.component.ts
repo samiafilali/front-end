@@ -1,71 +1,60 @@
-import { DecimalPipe } from '@angular/common';
-import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { BsModalService, ModalDirective } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs';
 
-
-import { userList } from './data';
+import { Utilisateur } from 'src/app/shared/classes/utilisateur';
+import { UtilisateurService } from 'src/app/shared/services/utilisateur.service';
 import { NgbdUserListSortableHeader } from './userlist-sortable.directive';
-import { userListModel } from './userlist.model';
-import { userListService } from './userlist.service';
 
 @Component({
   selector: 'app-userlist',
   templateUrl: './userlist.component.html',
-  styleUrls: ['./userlist.component.scss'],
-  providers: [userListService, DecimalPipe]
+  styleUrls: ['./userlist.component.scss']
 })
 
-/**
- * Contacts user-list component
- */
 export class UserlistComponent implements OnInit {
   // bread crumb items
   breadCrumbItems: Array<{}>;
 
   // Table data
-  contactsList!: Observable<userListModel[]>;
+  contactsList!: Observable<Utilisateur[]>;
   total: Observable<number>;
   createContactForm!: UntypedFormGroup;
   submitted = false;
-  contacts: any;
+  contacts: Utilisateur[] = [];
   files: File[] = [];
-
-  @ViewChildren(NgbdUserListSortableHeader) headers!: QueryList<NgbdUserListSortableHeader>;
-  @ViewChild('newContactModal', { static: false }) newContactModal?: ModalDirective;
-  @ViewChild('removeItemModal', { static: false }) removeItemModal?: ModalDirective;
+  imageURL: string | undefined;
   deleteId: any;
 
-  // constructor(){}
+  @ViewChildren(NgbdUserListSortableHeader) headers!: QueryList<NgbdUserListSortableHeader>;
 
-  constructor(private modalService: BsModalService, public service: userListService, private formBuilder: UntypedFormBuilder) {
-    this.contactsList = service.countries$;
-    this.total = service.total$;
-  }
+  constructor(
+    private formBuilder: UntypedFormBuilder,
+    private utilisateurService: UtilisateurService
+  ) {}
 
   ngOnInit() {
     this.breadCrumbItems = [{ label: 'Gestion' }, { label: 'Supervision', active: true }];
 
-    setTimeout(() => {
-      this.contactsList.subscribe(x => {
-        this.contacts = Object.assign([], x);
-      });
-      document.getElementById('elmLoader')?.classList.add('d-none')
-    }, 1200);
+    this.loadContacts();
 
     this.createContactForm = this.formBuilder.group({
       id: [''],
-      name: ['', [Validators.required]],
-      email: ['', [Validators.required]],
-      NumTelephone: ['', [Validators.required]],
-      Grade: ['', [Validators.required]],
-      img: ['', [Validators.required]],
-    })
+      nom: ['', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      numTelephone: ['', [Validators.required]],
+      grades: ['', [Validators.required]],
+      img: [''],
+    });
+  }
+
+  loadContacts() {
+    this.utilisateurService.getAllUtilisateurs().subscribe((contacts: Utilisateur[]) => {
+      this.contacts = contacts;
+    });
   }
 
   // File Upload
-  imageURL: string | undefined;
   fileChange(event: any) {
     let fileList: any = (event.target as HTMLInputElement);
     let file: File = fileList.files[0];
@@ -76,64 +65,72 @@ export class UserlistComponent implements OnInit {
         element.src = this.imageURL;
       });
       this.createContactForm.controls['img'].setValue(this.imageURL);
-    }
-    reader.readAsDataURL(file)
+    };
+    reader.readAsDataURL(file);
   }
 
   // Save User
   saveUser() {
     if (this.createContactForm.valid) {
-      if (this.createContactForm.get('id')?.value) {
-        this.service.products = userList.map((data: { id: any; }) => data.id === this.createContactForm.get('id')?.value ? { ...data, ...this.createContactForm.value } : data)
-      }
-      else {
-        const name = this.createContactForm.get('name')?.value;
-        const email = this.createContactForm.get('email')?.value;
-        const NumTelephone = this.createContactForm.get('NumTelephone')?.value;
-        const Grade = this.createContactForm.get('Grade')?.value;
-        userList.push({
-          id: userList.length + 1,
-          profile: this.imageURL,
-          name,
-          email,
-          Grade,
-          NumTelephone,
-          isSelected: false
-        })
+      const utilisateurData = this.createContactForm.value;
+      if (utilisateurData.id) {
+        // Update existing user
+        this.utilisateurService.addUtilisateur(utilisateurData).subscribe(() => {
+          this.loadContacts();
+        });
+      } else {
+        // Add new user
+        this.utilisateurService.addUtilisateur(utilisateurData).subscribe((newUser: Utilisateur) => {
+          this.contacts.push(newUser);
+        });
       }
       this.createContactForm.reset();
-      this.newContactModal.hide()
+      this.closeModal('newContactModal');
     }
   }
 
   // Edit User
   editUser(id: any) {
     this.submitted = false;
-    this.newContactModal.show();
+    this.openModal('newContactModal');
 
-    var modelTitle = document.querySelector('.modal-title') as HTMLAreaElement;
+    const modelTitle = document.querySelector('.modal-title') as HTMLAreaElement;
     modelTitle.innerHTML = 'Edit Profile';
-    var updateBtn = document.getElementById('addContact-btn') as HTMLAreaElement;
+    const updateBtn = document.getElementById('addContact-btn') as HTMLAreaElement;
     updateBtn.innerHTML = "Update";
 
-    var listData = this.contacts[id];
+    const listData = this.contacts[id];
 
     this.createContactForm.controls['id'].setValue(listData.id);
-    this.createContactForm.controls['name'].setValue(listData.name);
+    this.createContactForm.controls['nom'].setValue(listData.nom);
     this.createContactForm.controls['email'].setValue(listData.email);
-    this.createContactForm.controls['NumTelephone'].setValue(listData.NumTelephone);
-    this.createContactForm.controls['Grade'].setValue(listData.Grade);
-    this.createContactForm.controls['img'].setValue(listData.profile);
+    this.createContactForm.controls['numTelephone'].setValue(listData.numTelephone);
+    this.createContactForm.controls['grades'].setValue(listData.grades);
   }
 
   // Delete User
   removeUser(id: any) {
-    this.deleteId=id
-    this.removeItemModal.show();
+    this.deleteId = id;
+    this.openModal('removeItemModal');
   }
 
   confirmDelete() {
-    userList.splice(this.deleteId, 1);
-    this.removeItemModal.hide();
+    const userId = this.contacts[this.deleteId].id;
+    this.utilisateurService.deleteUtilisateur(userId).subscribe(() => {
+      this.contacts.splice(this.deleteId, 1);
+      this.closeModal('removeItemModal');
+    });
+  }
+
+  // Helper methods to open and close modals
+  openModal(modalId: string) {
+    const modal = new (window as any).bootstrap.Modal(document.getElementById(modalId));
+    modal.show();
+  }
+  
+  closeModal(modalId: string) {
+    const modalElement = document.getElementById(modalId);
+    const modalInstance = (window as any).bootstrap.Modal.getInstance(modalElement);
+    modalInstance.hide();
   }
 }

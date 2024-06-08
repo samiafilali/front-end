@@ -57,12 +57,13 @@ export const MENU: MenuItem[] = [
         label: 'MENUITEMS.JOBS.TEXT',
         icon: 'bx-briefcase-alt',
         subItems: [
-            {
+      /*      {
                 id: 58,
                 label: 'MENUITEMS.JOBS.LIST.JOBLIST',
                 link: '/jobs/list',
                 parentId: 57
             },
+            */
             {
                 id: 59,
                 label: 'MENUITEMS.JOBS.LIST.JOBGRID',

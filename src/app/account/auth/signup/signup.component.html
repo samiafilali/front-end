@@ -28,10 +28,9 @@
             </div>
             <div class="p-2">
 
-              <form class="needs-validation" name="signupForm" [formGroup]="signupForm" (ngSubmit)="onSubmit()"
-                novalidate>
+              <form #signupForm="ngForm" (ngSubmit)="onSubmit()" novalidate>
 
-                <alert type="success" *ngIf="successmsg" [dismissible]="false">Registeration successfull.
+                <alert type="success" *ngIf="successmsg" [dismissible]="false">Registration successful.
                 </alert>
 
                 <alert type="danger" *ngIf="error" [dismissible]="false">{{ error }}</alert>
@@ -39,35 +38,63 @@
                 <div class="mb-3">
                   <label for="username" class="form-label">Username</label>
 
-                  <input type="text" formControlName="username" class="form-control"
-                    [ngClass]="{ 'is-invalid': submitted && f.username.errors }" id="username"
-                    placeholder="Enter username" />
+                  <input type="text" name="username" [(ngModel)]="utilisateur.nom" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && !utilisateur.nom }" id="username"
+                    placeholder="Enter username" required />
 
-                  <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
-                    <div *ngIf="f.username.errors.required">Userame is required</div>
+                  <div *ngIf="submitted && !utilisateur.nom" class="invalid-feedback">
+                    Username is required
                   </div>
                 </div>
 
                 <div class="mb-3">
                   <label for="email" class="form-label">Email</label>
 
-                  <input type="email" formControlName="email" class="form-control"
-                    [ngClass]="{ 'is-invalid': submitted && f.email.errors }" id="email" placeholder="Email" />
+                  <input type="email" name="email" [(ngModel)]="utilisateur.email" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && !utilisateur.email }" id="email" placeholder="Email" required />
 
-                  <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
-                    <div *ngIf="f.email.errors.required">Email is required</div>
-                    <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
+                  <div *ngIf="submitted && !utilisateur.email" class="invalid-feedback">
+                    Email is required
+                  </div>
+                  <div *ngIf="submitted && utilisateur.email && !signupForm.controls.email.valid" class="invalid-feedback">
+                    Email must be a valid email address
                   </div>
                 </div>
 
                 <div class="mb-3">
                   <label for="password" class="form-label">Password</label>
 
-                  <input type="password" formControlName="password" class="form-control"
-                    [ngClass]="{ 'is-invalid': submitted && f.password.errors }" id="password" placeholder="Password" />
+                  <input type="password" name="password" [(ngModel)]="utilisateur.motDePasse" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && !utilisateur.motDePasse }" id="password" placeholder="Password" required />
 
-                  <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
-                    <div *ngIf="f.password.errors.required">Password is required</div>
+                  <div *ngIf="submitted && !utilisateur.motDePasse" class="invalid-feedback">
+                    Password is required
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="numTelephone" class="form-label">Phone Number</label>
+
+                  <input type="text" name="numTelephone" [(ngModel)]="utilisateur.numTelephone" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && !utilisateur.numTelephone }" id="numTelephone" placeholder="Phone Number" required />
+
+                  <div *ngIf="submitted && !utilisateur.numTelephone" class="invalid-feedback">
+                    Phone Number is required
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="grades" class="form-label">Grade</label>
+
+                  <select name="grades" [(ngModel)]="utilisateur.grades" class="form-control"
+                    [ngClass]="{ 'is-invalid': submitted && !utilisateur.grades }" id="grades" required>
+                    <option value="" disabled>Select Grade</option>
+                    <option value="Technicien">User</option>
+                    <option value="Admin">Admin</option>
+                  </select>
+
+                  <div *ngIf="submitted && !utilisateur.grades" class="invalid-feedback">
+                    Grade is required
                   </div>
                 </div>
 
@@ -96,9 +123,7 @@
                   </ul>
                 </div>
                 <div class="mt-4 text-center">
-                  <p class="mb-0">By registering you agree to the Skote <a href="javascript: void(0);"
-                      class="text-primary">Terms of
-                      Use</a></p>
+                  <p class="mb-0">By registering you agree to the Skote <a href="javascript: void(0);" class="text-primary">Terms of Use</a></p>
                 </div>
               </form>
             </div>

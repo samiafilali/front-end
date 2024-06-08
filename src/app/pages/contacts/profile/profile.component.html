@@ -1,5 +1,4 @@
 <div class="container-fluid">
-
   <app-page-title title="Profile" [breadcrumbItems]="breadCrumbItems"></app-page-title>
 
   <div class="row">
@@ -21,8 +20,36 @@
                 <img src="assets/images/users/avatar-1.jpg" alt="" class="img-thumbnail rounded-circle">
               </div>
             </div>
-            </div>
           </div>
+          <form #form="ngForm" (ngSubmit)="updateUtilisateur(form)">
+            <div class="mb-3">
+              <label for="nom" class="form-label">Nom</label>
+              <input type="text" name="nom" [(ngModel)]="utilisateur.nom" class="form-control" id="nom" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="form-label">E-mail</label>
+              <input type="email" name="email" [(ngModel)]="utilisateur.email" class="form-control" id="email" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="numTelephone" class="form-label">NumTelephone</label>
+              <input type="text" name="numTelephone" [(ngModel)]="utilisateur.numTelephone" class="form-control" id="numTelephone" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="grades" class="form-label">Grade</label>
+              <select name="grades" [(ngModel)]="utilisateur.grades" class="form-control" id="grades" required>
+                <option value="" disabled>Select Grade</option>
+                <option value="Technicien">User</option>
+                <option value="Admin">Admin</option>
+              </select>
+            </div>
+
+            <div class="mt-4 d-grid">
+              <button class="btn btn-primary" type="submit">modifier Profile</button>
+            </div>
+          </form>
         </div>
       </div>
       <!-- end card -->
@@ -34,19 +61,19 @@
               <tbody>
                 <tr>
                   <th scope="row">Nom :</th>
-                  <td>Cynthia Price</td>
+                  <td>{{ utilisateur.nom }}</td>
                 </tr>
                 <tr>
                   <th scope="row">NumTelephone :</th>
-                  <td>(123) 123 1234</td>
+                  <td>{{ utilisateur.numTelephone }}</td>
                 </tr>
                 <tr>
                   <th scope="row">E-mail :</th>
-                  <td>cynthiaskote@gmail.com</td>
+                  <td>{{ utilisateur.email }}</td>
                 </tr>
                 <tr>
                   <th scope="row">Grade:</th>
-                  <td>California, United States</td>
+                  <td>{{ utilisateur.grades }}</td>
                 </tr>
               </tbody>
             </table>
@@ -56,6 +83,7 @@
       <!-- end card -->
     </div>
 
+    <div class="col-xl-8">
       <div class="card">
         <div class="card-body">
           <h4 class="card-title mb-4">Mes Comptes Rendus</h4>
@@ -65,56 +93,16 @@
                 <tr>
                   <th scope="col">Id</th>
                   <th scope="col">Comptes Rendus</th>
-                  <th scope="col"> Date</th>
+                  <th scope="col">Date</th>
                   <th scope="col">Heure</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <th scope="row">1</th>
-                  <td>Skote admin UI</td>
-                  <td>2 Sep, 2019</td>
-                  <td>20 Oct, 2019</td>
-                </tr>
-
-                <tr>
-                  <th scope="row">2</th>
-                  <td>Skote admin Logo</td>
-                  <td>1 Sep, 2019</td>
-                  <td>2 Sep, 2019</td>
-                </tr>
-                <tr>
-                  <th scope="row">3</th>
-                  <td>Redesign - Landing page</td>
-                  <td>21 Sep, 2019</td>
-                  <td>29 Sep, 2019</td>
-                </tr>
-                <tr>
-                  <th scope="row">4</th>
-                  <td>App Landing UI</td>
-                  <td>29 Sep, 2019</td>
-                  <td>04 Oct, 2019</td>
-                </tr>
-                <tr>
-                  <th scope="row">5</th>
-                  <td>Blog Template</td>
-                  <td>05 Oct, 2019</td>
-                  <td>16 Oct, 2019</td>
-                
-                </tr>
-                <tr>
-                  <th scope="row">6</th>
-                  <td>Redesign - Multipurpose Landing</td>
-                  <td>17 Oct, 2019</td>
-                  <td>05 Nov, 2019</td>
-                 
-                </tr>
-                <tr>
-                  <th scope="row">7</th>
-                  <td>Logo Branding</td>
-                  <td>04 Nov, 2019</td>
-                  <td>05 Nov, 2019</td>
-                  
+                <tr *ngFor="let compteRendu of utilisateur.comptesRendu">
+                  <th scope="row">{{ compteRendu.id }}</th>
+                  <td>{{ compteRendu.texte }}</td>
+                  <td>{{ compteRendu.date | date: 'shortDate' }}</td>
+                  <td>{{ compteRendu.heure }}</td>
                 </tr>
               </tbody>
             </table>
@@ -122,5 +110,6 @@
         </div>
       </div>
     </div>
+  </div>
   <!-- end row -->
-
+</div>

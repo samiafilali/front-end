@@ -1,21 +1,21 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { NgApexchartsModule } from 'ng-apexcharts';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 import { NgSelectModule } from '@ng-select/ng-select';
 
-import { WidgetModule } from '../../shared/widget/widget.module';
 import { UIModule } from '../../shared/ui/ui.module';
+import { WidgetModule } from '../../shared/widget/widget.module';
 import { ContactsRoutingModule } from './contacts-routing.module';
 
-import { ModalModule } from 'ngx-bootstrap/modal';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { UserlistComponent } from './userlist/userlist.component';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { ProfileComponent } from './profile/profile.component';
+import { UserlistComponent } from './userlist/userlist.component';
 
 @NgModule({
   declarations: [ UserlistComponent, ProfileComponent],
@@ -30,6 +30,8 @@ import { ProfileComponent } from './profile/profile.component';
     ReactiveFormsModule ,
     TooltipModule.forRoot(),
     PaginationModule.forRoot(),
+    BsDropdownModule.forRoot(), // Add this line
+
     BsDropdownModule,
     ModalModule
   ]

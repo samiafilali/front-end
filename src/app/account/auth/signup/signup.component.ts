@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-
-import { AuthenticationService } from '../../../core/services/auth.service';
+import { Router } from '@angular/router';
+import { Utilisateur } from 'src/app/shared/classes/utilisateur';
+import { UtilisateurService } from 'src/app/shared/services/utilisateur.service';
 import { environment } from '../../../../environments/environment';
-import { first } from 'rxjs/operators';
-import { UserProfileService } from '../../../core/services/user.service';
+import { AuthenticationService } from '../../../core/services/auth.service';
+
 
 @Component({
   selector: 'app-signup',
@@ -14,63 +13,56 @@ import { UserProfileService } from '../../../core/services/user.service';
 })
 export class SignupComponent implements OnInit {
 
-  signupForm: UntypedFormGroup;
-  submitted:any = false;
-  error:any = '';
-  successmsg:any = false;
+  utilisateur: Utilisateur = {
+    id: null,
+    nom: '',
+    email: '',
+    motDePasse: '',
+    numTelephone: '',
+    grades: '',
+    comptesRendu: []
+  };
 
-  // set the currenr year
+  submitted: boolean = false;
+  error: string = '';
+  successmsg: boolean = false;
+
   year: number = new Date().getFullYear();
 
-  // tslint:disable-next-line: max-line-length
-  constructor(private formBuilder: UntypedFormBuilder, private route: ActivatedRoute, private router: Router, private authenticationService: AuthenticationService,
-    private userService: UserProfileService) { }
+  constructor(
+    private router: Router,
+    private authenticationService: AuthenticationService,
+    private utilisateurService: UtilisateurService
+  ) { }
 
-  ngOnInit() {
-    this.signupForm = this.formBuilder.group({
-      username: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-    });
-  }
+  ngOnInit() {}
 
-  // convenience getter for easy access to form fields
-  get f() { return this.signupForm.controls; }
-
-  /**
-   * On submit form
-   */
   onSubmit() {
     this.submitted = true;
 
-    // stop here if form is invalid
-    if (this.signupForm.invalid) {
+    if (!this.utilisateur.nom || !this.utilisateur.email || !this.utilisateur.motDePasse || !this.utilisateur.numTelephone || !this.utilisateur.grades) {
       return;
-    } else {
-      if (environment.defaultauth === 'firebase') {
-        this.authenticationService.register(this.f.email.value, this.f.password.value).then((res: any) => {
-          this.successmsg = true;
-          if (this.successmsg) {
-            this.router.navigate(['/dashboard']);
-          }
+    }
+
+    if (environment.defaultauth === 'firebase') {
+      this.authenticationService.register(this.utilisateur.email, this.utilisateur.motDePasse)
+        .then((res: any) => {
+          // Inscription Firebase réussie
+          this.utilisateurService.addUtilisateur(this.utilisateur)
+            .subscribe(
+              data => {
+                this.successmsg = true;
+                if (this.successmsg) {
+                  this.router.navigate(['/account/login']);
+                }
+              },
+              error => {
+                this.error = error ? error : '';
+              });
         })
-          .catch(error => {
-            this.error = error ? error : '';
-          });
-      } else {
-        this.userService.register(this.signupForm.value)
-          .pipe(first())
-          .subscribe(
-            data => {
-              this.successmsg = true;
-              if (this.successmsg) {
-                this.router.navigate(['/account/login']);
-              }
-            },
-            error => {
-              this.error = error ? error : '';
-            });
-      }
+        .catch(error => {
+          this.error = error ? error : '';
+        });
     }
   }
 }

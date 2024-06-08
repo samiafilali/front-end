@@ -1,38 +1,33 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Utilisateur } from '../classes/utilisateur';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UtilisateurService {
-  // 
-  url="http://localhost:8080/utilisateurs";
-//crud service de l'entité utilisateur
+  private apiUrl = 'http://localhost:8080/utilisateur'; // Update with your actual backend URL
 
-  constructor(private http:HttpClient) { }
+  constructor(private http: HttpClient) { }
 
-  //recuperer la liste des utilisateurs
-  getAllUtilisateurs(){
-    return this.http.get(this.url);
+  getAllUtilisateurs(): Observable<Utilisateur[]> {
+    return this.http.get<Utilisateur[]>(`${this.apiUrl}/`);
   }
 
-  //recuperer un utilisateur par son id
-  getUtilisateurById(id){
-    return this.http.get(this.url+"/"+id);
+  getUtilisateurById(id: number): Observable<Utilisateur> {
+    return this.http.get<Utilisateur>(`${this.apiUrl}/${id}`);
   }
 
-  //ajouter un utilisateur
-  addUtilisateur(utilisateur){
-    return this.http.post(this.url,utilisateur);
+  addUtilisateur(utilisateur: Utilisateur): Observable<Utilisateur> {
+    return this.http.post<Utilisateur>(this.apiUrl, utilisateur);
   }
 
-  //modifier un utilisateur
-  editUtilisateur(utilisateur){
-    return this.http.put(this.url,utilisateur);
+  getOneUtilisateur(email: string): Observable<Utilisateur> {
+    return this.http.get<Utilisateur>(`${this.apiUrl}/email/${email}`);
   }
 
-  //supprimer un utilisateur
-  deleteUtilisateur(id){
-    return this.http.delete(this.url+"/"+id);
+  deleteUtilisateur(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }

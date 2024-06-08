@@ -3,7 +3,7 @@ import { Utilisateur } from "./utilisateur";
 
 export interface CompteRendu {
     id: number;
-    text: string;
-    utilisateur:Utilisateur;
+    texte: string;
+    technicien:Utilisateur;
     alerte:Alerte;
 }
