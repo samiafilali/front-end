@@ -98,7 +98,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let compteRendu of utilisateur.comptesRendu">
+                <tr *ngFor="let compteRendu of utilisateur.compteRendus">
                   <th scope="row">{{ compteRendu.id }}</th>
                   <td>{{ compteRendu.texte }}</td>
                   <td>{{ compteRendu.date | date: 'shortDate' }}</td>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Utilisateur } from 'src/app/shared/classes/utilisateur';
+import { Grades, Utilisateur } from 'src/app/shared/classes/utilisateur';
 import { UtilisateurService } from 'src/app/shared/services/utilisateur.service';
 import { environment } from '../../../../environments/environment';
 import { AuthenticationService } from '../../../core/services/auth.service';
@@ -19,8 +19,9 @@ export class SignupComponent implements OnInit {
     email: '',
     motDePasse: '',
     numTelephone: '',
-    grades: '',
-    comptesRendu: []
+    grades: null,
+    compteRendus: [],
+    alertes: []
   };
 
   submitted: boolean = false;

@@ -1,9 +1,9 @@
 import { DecimalPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { CompteRendu } from 'src/app/shared/classes/compte-rendu';
+import { CompteRendu } from 'src/app/shared/classes/compterendu';
 import { Utilisateur } from 'src/app/shared/classes/utilisateur';
-import { CompteRenduService } from 'src/app/shared/services/compte-rendu.service';
+import { CompteRenduService } from 'src/app/shared/services/compterendu.service';
 import { UtilisateurService } from 'src/app/shared/services/utilisateur.service';
 import { JobGridService } from './grid.service';
 
@@ -89,7 +89,10 @@ getUtilisateur(email: string) {
       id: 0,
       texte: this.compteRenduText,
       technicien: this.me,
-      alerte: null
+      alerte: null,
+      date: undefined,
+      createdAt: '',
+      updatedAt: ''
     };
 
     this.compteRenduService.saveCompteRendu(newCompteRendu).subscribe(

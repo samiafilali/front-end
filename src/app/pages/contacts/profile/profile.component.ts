@@ -17,8 +17,9 @@ export class ProfileComponent implements OnInit {
     email: '',
     motDePasse: '',
     numTelephone: '',
-    grades: '',
-    comptesRendu: []
+    grades: null,
+    compteRendus: [],
+    alertes: []
   };
   error: string = '';
   successmsg: boolean = false;

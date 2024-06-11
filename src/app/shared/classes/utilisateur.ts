@@ -1,13 +1,23 @@
-import { CompteRendu } from "./compte-rendu";
+import { CompteRendu } from "./compterendu";
+import { Alerte } from './alerte';
+
+export enum Grades {
+  Technicien = 'Technicien',
+  Admin = 'Admin'
+}
 
 export interface Utilisateur {
   id: number;
   nom: string;
-  prenom?: string; // Facultatif si non requis
   email: string;
   motDePasse: string;
   numTelephone: string;
-  updatedAt?: string; // Facultatif si non requis
-  grades: string;
-  comptesRendu?: CompteRendu[]; // Facultatif si non requis
+  grades: Grades;
+  compteRendus: CompteRendu[];
+  alertes: Alerte[];
+
+  //constructor() {
+    //this.compteRendus = [];
+    //this.alertes = [];
+//}
 }
