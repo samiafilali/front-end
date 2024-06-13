@@ -15,9 +15,5 @@ export interface Utilisateur {
   grades: Grades;
   compteRendus: CompteRendu[];
   alertes: Alerte[];
-
-  //constructor() {
-    //this.compteRendus = [];
-    //this.alertes = [];
-//}
+  selected?: boolean; // Ajout de la propriété selected
 }

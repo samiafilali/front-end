@@ -1,5 +1,5 @@
 const userList = [
-  {
+ /* {
     id: 1,
     profile: "assets/images/users/avatar-1.jpg",
     name: "David McHenry",
@@ -115,7 +115,7 @@ const userList = [
     Grade: ['Php', 'Java', 'Python'],
     NumTelephone: "25",
     isSelected: false
-  },
+  }, */
 ]
 
 export { userList };

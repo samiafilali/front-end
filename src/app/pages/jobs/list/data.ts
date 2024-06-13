@@ -1,5 +1,5 @@
 const JobListdata = [
-  {
+  /* {
     id: 1,
     title : "Magento Developer",
     name : "Themesbrand",
@@ -130,7 +130,7 @@ const JobListdata = [
     last_date : "25 June 2021",
     status : "Active",
     status_color: "success"
-  },
-];
+  }, */
+]; 
 
 export { JobListdata };

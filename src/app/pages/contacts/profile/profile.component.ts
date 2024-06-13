@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { UtilisateurService } from 'src/app/shared/services/utilisateur.service';
 
 import { NgForm } from '@angular/forms';
@@ -24,7 +25,8 @@ export class ProfileComponent implements OnInit {
   error: string = '';
   successmsg: boolean = false;
 
-  constructor(private utilisateurService: UtilisateurService) { }
+  constructor(
+    private route: ActivatedRoute,private utilisateurService: UtilisateurService) { }
 
   ngOnInit() {
     this.breadCrumbItems = [{ label: 'Contacts' }, { label: 'Profile', active: true }];

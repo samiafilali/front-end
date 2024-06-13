@@ -27,7 +27,14 @@ export class UtilisateurService {
     return this.http.get<Utilisateur>(`${this.apiUrl}/email/${email}`);
   }
 
+  updateUtilisateur(utilisateur: Utilisateur): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${utilisateur.id}`, utilisateur);
+  }
+
   deleteUtilisateur(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
+
+export { Utilisateur };
+
