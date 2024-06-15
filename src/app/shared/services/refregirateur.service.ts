@@ -1,37 +1,38 @@
+// src/app/services/refregirateur.service.ts
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RefregirateurService {
-  url="http://localhost:8080/refregirateurs";
-  //crud service de l'entité utilisateur
-  
-    constructor(private http:HttpClient) { }
-  //recuperer la liste des refregirateurs
-    getAllRefregirateurs(){
-      return this.http.get(this.url);
-    }
-  
-    //recuperer un refregirateur par son id
-    getRefregirateurById(id){
-      return this.http.get(this.url+"/"+id);
-    }
-  
-    //ajouter un refregirateur
-    addRefregirateur(refregirateur){
-      return this.http.post(this.url,refregirateur);
-    }
-  
-    //modifier un refregirateur
-    editRefregirateur(refregirateur){
-      return this.http.put(this.url,refregirateur);
-    }
-  
-    //supprimer un refregirateur
-    deleteRefregirateur(id){
-      return this.http.delete(this.url+"/"+id);
-    }
-    
+  private readonly url = 'http://localhost:8080/refrigerateurs';
+
+  constructor(private http: HttpClient) { }
+
+  getAllRefregirateurs(): Observable<any> {
+    return this.http.get(this.url);
+  }
+
+  getRefrigerateurById(id: number): Observable<any> {
+    return this.http.get(`${this.url}/${id}`);
+  }
+
+  getRefrigerateurByDeviceId(deviceId: string): Observable<any> {
+    const url = `${this.url}/device/${deviceId}`;
+    return this.http.get(url);
+  }
+
+  addRefrigerateur(refrigerateur: any): Observable<any> {
+    return this.http.post(this.url, refrigerateur);
+  }
+
+  editRefrigerateur(refrigerateur: any): Observable<any> {
+    return this.http.put(this.url, refrigerateur);
+  }
+
+  deleteRefrigerateur(id: number): Observable<any> {
+    return this.http.delete(`${this.url}/${id}`);
+  }
 }

@@ -10,20 +10,20 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { UIModule } from '../../shared/ui/ui.module';
 
 import {JobsRoutingModule} from "./jobs-routing.module";
-import { ListComponent } from './list/list.component';
+
 import { GridComponent } from './grid/grid.component';
-import { DetailsComponent } from './details/details.component';
-import { CategoriesComponent } from './categories/categories.component';
-import { CandidateOverviewComponent } from './candidate-overview/candidate-overview.component'; 
+import { ListComponent } from './list/list.component';
+
+
+
 
 @NgModule({
   declarations: [
-    ListComponent,
+   
     GridComponent,
+    ListComponent
+    
   
-    DetailsComponent,
-    CategoriesComponent
-
   ],
   imports: [
     CommonModule,

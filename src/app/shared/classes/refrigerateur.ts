@@ -3,8 +3,7 @@ import { Capteur } from './capteur';
 export interface Refrigerateur {
     id: number;
     label: string;
-    temperatureMax: number;
-    temperatureMin: number;
+    temperatureMax,temperatureMin, humiditeMin, humiditeMax: number;
     emplacement: string;
     capteur: Capteur;
 

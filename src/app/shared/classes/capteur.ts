@@ -4,7 +4,7 @@ import { Alerte } from './alerte';
 export interface Capteur {
     id: number;
     type: string;
-    valeur: number; 
+    Temperature, Humidite : number; 
     refrigerateur : Refrigerateur;
     alertes: Alerte[];
 

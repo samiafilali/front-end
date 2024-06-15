@@ -7,6 +7,8 @@ import { CyptolandingComponent } from './cyptolanding/cyptolanding.component';
 import { Page404Component } from './extrapages/page404/page404.component';
 import { UserlistComponent } from './pages/contacts/userlist/userlist.component';
 import { ProfileComponent } from './pages/contacts/profile/profile.component';
+import { ListComponent } from './pages/jobs/list/list.component';
+
 
 const routes: Routes = [
   { path: 'account', loadChildren: () => import('./account/account.module').then(m => m.AccountModule) },
@@ -16,6 +18,8 @@ const routes: Routes = [
   { path: 'crypto-ico-landing', component: CyptolandingComponent },
   { path: 'user-profile/:id', component: ProfileComponent },
   { path: '**', component: Page404Component },
+  { path: 'alertes', component: ListComponent },
+  { path: '', redirectTo: '/alertes', pathMatch: 'full' }
   
 ];
 
