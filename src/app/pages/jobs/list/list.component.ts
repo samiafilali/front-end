@@ -1,4 +1,3 @@
-// src/app/components/alertes/list.component.ts
 import { Component, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AlerteService } from 'src/app/shared/services/alerte.service';
@@ -13,7 +12,7 @@ import { jobListModel } from './list.model';
 export class ListComponent implements OnInit {
   breadCrumbItems: Array<{}>;
   lists?: any;
-  alertes$: Observable<jobListModel[]>;
+  alertes$: Observable<any[]>;
 
   @ViewChildren(NgbdJobListSortableHeader) headers!: QueryList<NgbdJobListSortableHeader>;
 
@@ -24,10 +23,14 @@ export class ListComponent implements OnInit {
   ngOnInit(): void {
     this.breadCrumbItems = [{ label: 'Alertes' }, { label: 'Alertes', active: true }];
 
-    this.alertes$.subscribe(alertes => {
-      this.lists = alertes;
+    this.alertes$.subscribe({
+      next: alertes => {
+        console.log('Alertes reçues:', alertes);
+        this.lists = alertes;
+      },
+      error: err => {
+        console.error('Error fetching alerts:', err);
+      }
     });
   }
-
 }
-

@@ -1,89 +1,43 @@
-// src/app/services/alerte.service.ts
-import { HttpClient } from '@angular/common/http';
+
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UbidotsService } from './ubidots.service';
-import { RefregirateurService } from './refregirateur.service';
-import { Observable, timer } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AlerteService {
-  private readonly url = 'http://localhost:8080/api/alert';
-  private readonly thresholdCheckInterval = 60000; // 1 minute
+  private readonly url = 'http://localhost:8080/api/alertes'; // Assurez-vous que cette URL est correcte
 
-  constructor(
-    private http: HttpClient,
-    private ubidotsService: UbidotsService,
-    private refrigerateurService: RefregirateurService
-  ) {
-    // Check thresholds periodically
-    timer(0, this.thresholdCheckInterval).pipe(
-      switchMap(() => this.checkThresholds())
-    ).subscribe();
-  }
+  constructor(private http: HttpClient) {}
 
   getAllAlertes(): Observable<any> {
-    return this.http.get(this.url);
-  }
-
-  getAlerteById(id: number): Observable<any> {
-    return this.http.get(`${this.url}/${id}`);
-  }
-
-  addAlerte(alerte: any): Observable<any> {
-    return this.http.post(this.url, alerte);
-  }
-
-  private checkThresholds(): Observable<any> {
-    // Example deviceId, replace with your actual deviceId
-    const deviceId = '666cbd811a63ef09a453b1ce';
-
-    return this.ubidotsService.getSensorData(deviceId).pipe(
-      switchMap(data => {
-        return this.getRefrigerateurByDeviceId(deviceId).pipe(
-          map(refrigerateur => {
-            const alertes = [];
-
-            data.results.forEach(sensorData => {
-              const { value, variable } = sensorData;
-
-              if (variable === 'temperature') {
-                if (value < refrigerateur.temperatureMin || value > refrigerateur.temperatureMax) {
-                  alertes.push(this.createAlerte(refrigerateur, variable, value));
-                }
-              } else if (variable === 'humidite') {
-                if (value < refrigerateur.humiditeMin || value > refrigerateur.humiditeMax) {
-                  alertes.push(this.createAlerte(refrigerateur, variable, value));
-                }
-              }
-            });
-
-            return alertes;
-          })
-        );
-      }),
-      switchMap(alertes => {
-        return alertes.length > 0 ? this.http.post(this.url, alertes) : [];
-      })
+    return this.http.get(this.url).pipe(
+      catchError(this.handleError)
     );
   }
 
-  private getRefrigerateurByDeviceId(deviceId: string): Observable<any> {
-    // Remplacez cette URL par celle de votre backend qui récupère les données du réfrigérateur par l'ID de l'appareil
-    const url = `http://localhost:8080/api/refrigerateurs/device/${deviceId}`;
-    return this.http.get(url);
+  getAlerteById(id: number): Observable<any> {
+    return this.http.get(`${this.url}/${id}`).pipe(
+      catchError(this.handleError)
+    );
   }
 
-  private createAlerte(refrigerateur: any, variable: string, value: number): any {
-    return {
-      type: variable,
-      status: value < refrigerateur[`${variable}Min`] ? 'Basse' : 'Haute',
-      refrigerateur: refrigerateur,
-      capteur: { id: refrigerateur.capteur.id },
-      value: value,
-      date: new Date()
-    };
+  addAlerte(alerte: any): Observable<any> {
+    return this.http.post(this.url, alerte).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Unknown error!';
+    if (error.error instanceof ErrorEvent) {
+      errorMessage = `Client-side error: ${error.error.message}`;
+    } else {
+      errorMessage = `Server-side error: ${error.status}\nMessage: ${error.message}`;
+    }
+    console.error(`Error Code: ${error.status}\nMessage: ${error.message}`);
+    return throwError(() => new Error(`Error Code: ${error.status}\nMessage: ${error.message}`));
   }
 }
