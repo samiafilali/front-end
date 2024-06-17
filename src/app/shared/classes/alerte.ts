@@ -10,6 +10,7 @@ status: string;
 technicien: Utilisateur;
 compteRendu:CompteRendu;
 capteur: Capteur;
+RefrigerateurLabel: string;
 
 //constructor() {
    // super();

@@ -16,18 +16,20 @@
                 <tr>
                   <th scope="col">Id</th>
                   <th scope="col">Type</th>
-                  <th scope="col">Status</th>
+                  <th scope="col">Valeur</th>
                   <th scope="col">Date</th>
-                  <th scope="col">Id Capteur</th>
+                  <th scope="col">Réfrigérateur Label</th>
+                  <th scope="col">Statut</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let data of lists">
                   <th scope="row">{{data.id}}</th>
                   <td>{{data.type}}</td>
+                  <td>{{data.value}}</td>
+                  <td>{{data.timestamp | date:'short'}}</td>
+                  <td>{{data.refrigerateurLabel}}</td>
                   <td>{{data.status}}</td>
-                  <td>{{data.date | date:'short'}}</td>
-                  <td>{{data.capteur?.id}}</td>
                 </tr>
               </tbody>
             </table>
