@@ -178,7 +178,7 @@
       "TEXT": "Gestion",
       "LIST": {
         "USERGRID": "Utilisateur",
-        "USERLIST": "Supervision",
+        "USERLIST": "Liste des utilisateurs",
         "PROFILE": "Profile"
       }
     },

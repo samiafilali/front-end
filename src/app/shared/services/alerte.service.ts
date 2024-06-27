@@ -40,3 +40,4 @@ export class AlerteService {
     return throwError(() => new Error(`Error Code: ${error.status}\nMessage: ${error.message}`));
   }
 }
+
